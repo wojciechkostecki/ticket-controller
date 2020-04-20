@@ -1,4 +1,5 @@
 import java.time.LocalDateTime;
+import java.time.temporal.TemporalAmount;
 
 public class Ticket {
     private LocalDateTime buyingTime;
@@ -27,5 +28,11 @@ public class Ticket {
 
     public void setValidityTime(int validityTime) {
         this.validityTime = validityTime;
+    }
+
+    @Override
+    public String toString() {
+        return "Data i czas zakupu biletu: " + buyingTime +
+                ", czas ważności biletu w minutach: " + validityTime;
     }
 }
