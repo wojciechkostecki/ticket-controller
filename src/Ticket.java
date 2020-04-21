@@ -1,38 +1,37 @@
 import java.time.LocalDateTime;
-import java.time.temporal.TemporalAmount;
 
 public class Ticket {
-    private LocalDateTime buyingTime;
-    private int validityTime;
+    private LocalDateTime purchaseDate;
+    private int validFor;
 
-    public Ticket(int validityTime) {
-        this(LocalDateTime.now(), validityTime);
+    public Ticket(int validFor) {
+        this(LocalDateTime.now(), validFor);
     }
 
-    public Ticket(LocalDateTime buyingTime, int validityTime) {
-        this.buyingTime = buyingTime;
-        this.validityTime = validityTime;
+    public Ticket(LocalDateTime buyingTime, int validFor) {
+        this.purchaseDate = buyingTime;
+        this.validFor = validFor;
     }
 
-    public LocalDateTime getBuyingTime() {
-        return buyingTime;
+    public LocalDateTime getPurchaseDate() {
+        return purchaseDate;
     }
 
-    public void setBuyingTime(LocalDateTime buyingTime) {
-        this.buyingTime = buyingTime;
+    public void setPurchaseDate(LocalDateTime purchaseDate) {
+        this.purchaseDate = purchaseDate;
     }
 
-    public int getValidityTime() {
-        return validityTime;
+    public int getValidFor() {
+        return validFor;
     }
 
-    public void setValidityTime(int validityTime) {
-        this.validityTime = validityTime;
+    public void setValidFor(int validFor) {
+        this.validFor = validFor;
     }
 
     @Override
     public String toString() {
-        return "Data i czas zakupu biletu: " + buyingTime +
-                ", czas ważności biletu w minutach: " + validityTime;
+        return "Data i czas zakupu biletu: " + purchaseDate +
+                ", czas ważności biletu w minutach: " + validFor;
     }
 }

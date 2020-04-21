@@ -28,22 +28,22 @@ public class TicketController {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         Date controlDate = sdf.parse(date);
 
-        int passengersWithoutTicket = 0;
+        int ticketExpirationDate = 0;
 
         for (Passenger passenger : passengers) {
-            LocalDateTime ticketDate = passenger.getTicket().getBuyingTime().
-                    plusMinutes(passenger.getTicket().getValidityTime());
+            LocalDateTime ticketDate = passenger.getTicket().getPurchaseDate().
+                    plusMinutes(passenger.getTicket().getValidFor());
             Date ticketExpiryDate = Date.from(ticketDate.atZone(ZoneId.systemDefault()).toInstant());
             if (controlDate.after(ticketExpiryDate)) {
-                passengersWithoutTicket++;
+                ticketExpirationDate++;
             }
         }
 
-        Passenger[] withoutTicket = new Passenger[passengersWithoutTicket];
+        Passenger[] withoutTicket = new Passenger[ticketExpirationDate];
 
         for (int i = 0, j = 0; i < passengers.length; i++) {
-            LocalDateTime ticketDate = passengers[i].getTicket().getBuyingTime().
-                    plusMinutes(passengers[i].getTicket().getValidityTime());
+            LocalDateTime ticketDate = passengers[i].getTicket().getPurchaseDate().
+                    plusMinutes(passengers[i].getTicket().getValidFor());
             Date ticketExpiryDate = Date.from(ticketDate.atZone(ZoneId.systemDefault()).toInstant());
             if (controlDate.after(ticketExpiryDate)) {
                 withoutTicket[j] = passengers[i];
