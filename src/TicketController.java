@@ -2,6 +2,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Scanner;
 
@@ -25,16 +26,16 @@ public class TicketController {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Data i godzina kontroli w formacie: yyyy-MM-dd HH:mm");
         String date = scanner.nextLine();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        Date controlDate = sdf.parse(date);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        LocalDateTime controlDate = LocalDateTime.parse(date,formatter);
 
         int ticketExpirationDate = 0;
 
         for (Passenger passenger : passengers) {
             LocalDateTime ticketDate = passenger.getTicket().getPurchaseDate().
                     plusMinutes(passenger.getTicket().getValidFor());
-            Date ticketExpiryDate = Date.from(ticketDate.atZone(ZoneId.systemDefault()).toInstant());
-            if (controlDate.after(ticketExpiryDate)) {
+
+            if (controlDate.isAfter(ticketDate)) {
                 ticketExpirationDate++;
             }
         }
@@ -44,8 +45,7 @@ public class TicketController {
         for (int i = 0, j = 0; i < passengers.length; i++) {
             LocalDateTime ticketDate = passengers[i].getTicket().getPurchaseDate().
                     plusMinutes(passengers[i].getTicket().getValidFor());
-            Date ticketExpiryDate = Date.from(ticketDate.atZone(ZoneId.systemDefault()).toInstant());
-            if (controlDate.after(ticketExpiryDate)) {
+            if (controlDate.isAfter(ticketDate)) {
                 withoutTicket[j] = passengers[i];
                 j++;
             }
