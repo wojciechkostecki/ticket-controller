@@ -1,13 +1,9 @@
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.Scanner;
+import java.util.*;
 
 public class TicketController {
-    public static void main(String[] args) throws ParseException {
+    public static void main(String[] args) {
         TicketMachine ticketMachine = new TicketMachine();
 
         Passenger[] passengers = new Passenger[3];
@@ -22,35 +18,24 @@ public class TicketController {
         printPassengerWithoutTicket(validateTickets(passengers));
     }
 
-    private static Passenger[] validateTickets(Passenger[] passengers) throws ParseException {
+    private static Passenger[] validateTickets(Passenger[] passengers) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Data i godzina kontroli w formacie: yyyy-MM-dd HH:mm");
         String date = scanner.nextLine();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         LocalDateTime controlDate = LocalDateTime.parse(date,formatter);
 
-        int ticketExpirationDate = 0;
-
-        for (Passenger passenger : passengers) {
-            LocalDateTime ticketDate = passenger.getTicket().getPurchaseDate().
-                    plusMinutes(passenger.getTicket().getValidFor());
-
-            if (controlDate.isAfter(ticketDate)) {
-                ticketExpirationDate++;
+        List<Passenger> passengerList = Arrays.asList(passengers);
+        List<Passenger> withoutTicketList = new ArrayList<>();
+        for (Passenger passenger : passengerList) {
+            LocalDateTime ticketDate = passenger.getTicket().getPurchaseDate().plusMinutes(passenger.getTicket().getValidFor());
+            if(controlDate.isAfter(ticketDate)){
+                withoutTicketList.add(passenger);
             }
         }
 
-        Passenger[] withoutTicket = new Passenger[ticketExpirationDate];
-
-        for (int i = 0, j = 0; i < passengers.length; i++) {
-            LocalDateTime ticketDate = passengers[i].getTicket().getPurchaseDate().
-                    plusMinutes(passengers[i].getTicket().getValidFor());
-            if (controlDate.isAfter(ticketDate)) {
-                withoutTicket[j] = passengers[i];
-                j++;
-            }
-        }
-        return withoutTicket;
+        Passenger[] withoutTicket = new Passenger[withoutTicketList.size()];
+        return withoutTicketList.toArray(withoutTicket);
     }
 
     private static void printPassengerWithoutTicket(Passenger[] passengers) {
