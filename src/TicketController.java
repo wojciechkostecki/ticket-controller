@@ -15,7 +15,7 @@ public class TicketController {
         ticketMachine.buyTicket(passengers[1], 20);
         ticketMachine.buyTicket(passengers[2], 15);
 
-        printPassengerWithoutTicket(validateTickets(passengers));
+        printPassenger(validateTickets(passengers));
     }
 
     private static Passenger[] validateTickets(Passenger[] passengers) {
@@ -26,19 +26,18 @@ public class TicketController {
         LocalDateTime controlDate = LocalDateTime.parse(date,formatter);
 
         List<Passenger> passengerList = Arrays.asList(passengers);
-        List<Passenger> withoutTicketList = new ArrayList<>();
+        List<Passenger> passengersWithoutTickets = new ArrayList<>();
         for (Passenger passenger : passengerList) {
-            LocalDateTime ticketDate = passenger.getTicket().getPurchaseDate().plusMinutes(passenger.getTicket().getValidFor());
-            if(controlDate.isAfter(ticketDate)){
-                withoutTicketList.add(passenger);
+            LocalDateTime ticketExpirationDate = passenger.getTicket().getPurchaseDate().plusMinutes(passenger.getTicket().getValidFor());
+            if(controlDate.isAfter(ticketExpirationDate)){
+                passengersWithoutTickets.add(passenger);
             }
         }
-
-        Passenger[] withoutTicket = new Passenger[withoutTicketList.size()];
-        return withoutTicketList.toArray(withoutTicket);
+        Passenger[] withoutTicket = new Passenger[passengersWithoutTickets.size()];
+        return passengersWithoutTickets.toArray(withoutTicket);
     }
 
-    private static void printPassengerWithoutTicket(Passenger[] passengers) {
+    private static void printPassenger(Passenger[] passengers) {
         System.out.println("Pasażerowie bez biletu: ");
         for (Passenger passenger : passengers) {
             System.out.println(passenger.getFirstName() + " " + passenger.getLastName());
